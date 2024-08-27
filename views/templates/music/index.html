@@ -136,7 +136,7 @@
         <div class="d-flex flex-column">
             {% for mpfile in mlist %}
             <div class="music-list-item">
-                <span><img class="mimg" src="{{ mpfile.img_path }}" alt="{{ mpfile.title }}">
+                <span><img class="mimg" src="http://127.0.0.1/cdn/img/{{ mpfile.title }}.png" alt="{{ mpfile.title }}">
                     {{ mpfile.title }} - {{ mpfile.name }}</span>
                 <div>
                     <button class="btn btn-primary btn-sm" onclick="playMusic()">재생</button>
