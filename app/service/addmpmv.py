@@ -1,6 +1,6 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-from app.model.mpfile import Mpfile
+from app.model.music import Mpfile
 
 # 데이터베이스 URL을 실제 값으로 바꿔주세요
 DATABASE_URL = 'sqlite:///C:/Users/cloud6a/Documents/projects2024/project/db.sqlite3'  # SQLite DB 파일의 경로

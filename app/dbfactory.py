@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.model import board, member, mpfile
+from app.model import board, member, music
 from app.settings import config
 
 engine = create_engine(config.dbconn, echo=True)
@@ -18,7 +18,7 @@ def get_db():
 async def db_startup():
     member.Base.metadata.create_all(engine)
     board.Base.metadata.create_all(engine)
-    mpfile.Base.metadata.create_all(engine)
+    music.Base.metadata.create_all(engine)
 
 async def db_shutdown():
     pass

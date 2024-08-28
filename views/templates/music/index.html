@@ -134,24 +134,25 @@
     <div class="mb-4">
         <h5>추천 10곡</h5>
         <div class="d-flex flex-column">
-            {% for mpfile in mlist %}
+            {% for music in mlist %}
             <div class="music-list-item">
-                <span><img class="mimg" src="http://127.0.0.1/cdn/img/{{ mpfile.title }}.png" alt="{{ mpfile.title }}">
-                    {{ mpfile.title }} - {{ mpfile.name }}</span>
+                <span>
+                    <img class="mimg" src="/static/img/{{ music.title }}.png" alt="{{ music.title }}">
+                    {{ music.title }} - {{ music.singer }}
+                </span>
                 <div>
-                    <button class="btn btn-primary btn-sm" onclick="playMusic()">재생</button>
+                    <button class="btn btn-primary btn-sm" onclick="playMusic('{{ music.mno }}', '{{ music.title }}', '{{ music.singer }}')">재생</button>
                     <button class="btn btn-secondary btn-sm">보관함 추가</button>
                 </div>
             </div>
             {% endfor %}
         </div>
-        <!-- 추가적인 리스트 항목들을 여기에 추가하세요 -->
     </div>
 </main>
 
 <!-- 음악 플레이어 섹션 -->
 <div id="music-player" class="d-none">
-    <h5 style="color: white; width: 200px">문어의 꿈 - 안예은</h5>
+    <h5 id="music-title" style="color: white; width: 200px">빅뱅 - 붉은노을</h5>
     <img src="/static/img/totoro.png" alt="K-Pop" class="img-fluid" style="margin-right: 20px; height: 60px; width: 60px">
     <audio id="audio-player" controls>
         <source id="audio-source" src="" type="audio/mpeg">
@@ -160,31 +161,19 @@
 </div>
 
 <script>
-    function playMusic() {
+    function playMusic(mno, title, singer) {
         // 음악 플레이어 섹션을 표시합니다.
         document.getElementById('music-player').classList.remove('d-none');
+
+        // 제목과 가수 이름을 업데이트합니다.
+        document.getElementById('music-title').textContent = `${title} - ${singer}`;
 
         // 오디오 소스와 URL 설정
         var audioPlayer = document.getElementById('audio-player');
         var audioSource = document.getElementById('audio-source');
-        audioSource.src = '/static/music/문어의-꿈-안예은.mp3';     // 실제 오디오 파일 URL로 교체
-        audioPlayer.load();
-        audioPlayer.play();
-    }
-</script>
-
-<script>
-    function playMusic() {
-        // 음악 플레이어 섹션을 표시합니다.
-        document.getElementById('music-player').classList.remove('d-none');
-
-        // 오디오 소스와 URL 설정 (예시 URL을 사용, 실제 URL로 변경해야 함)
-        var audioPlayer = document.getElementById('audio-player');
-        var audioSource = document.getElementById('audio-source');
-        audioSource.src = 'https://www.youtube.com/watch?v=LBmB3DGxnNk'; // 실제 오디오 파일 URL로 교체
+        audioSource.src = `/music/mp3play/${mno}`; // 선택한 mno 번의 노래 URL
         audioPlayer.load();
         audioPlayer.play();
     }
 </script>
 {% endblock %}
-
