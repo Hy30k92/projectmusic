@@ -37,6 +37,17 @@ class Mp3Service:
 
         except SQLAlchemyError as ex:
             print(f'▶▶▶  music_mp3 오류 발생: , {str(ex)}')
+
+    @staticmethod
+    def selectone_musicimage(db, mno):
+        try:
+            stmt = select(Music.iname).where(Music.mno == mno)
+            result = db.execute(stmt).scalars().first()
+            return result
+
+        except SQLAlchemyError as ex:
+            print(f'▶▶▶ selectone_file 오류 발생 : {str(ex)}')
+
             
 class MusicVideoService:
     @staticmethod

@@ -65,7 +65,7 @@ async def mp3play(mno: int, db: Session = Depends(get_db) ):
 async def musiccover(mno: int, db: Session = Depends(get_db) ):
 
     MUSICIMAGE_PATH = 'd:/test/musicimage/'
-    mp3_image = Mp3Service.music_mp3(db, mno)
+    mp3_image = Mp3Service.selectone_musicimage(db, mno)
 
     file_path = os.path.join(MUSICIMAGE_PATH, mp3_image )
 
