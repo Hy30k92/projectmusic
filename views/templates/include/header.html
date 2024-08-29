@@ -19,6 +19,9 @@
             justify-content: center;
             max-width: 750px;
         }
+
+        .btn{min-width: 100px}
+
         @media (max-width: 870px) {
             #search {
                 margin-left: 60px ; /* 창을줄이면 토글이 생기면서 오른쪽으로 이동 */
@@ -35,13 +38,13 @@
     <div id="search" class="container-fluid">
         <span class="navbar"></span>
         <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
-            <a class="navbar-brand m-1" href="/music/index" style="color: skyblue" >GITMUSIC</a>
+            <a class="navbar-brand m-1" href="/music/index" style="color: skyblue" >GITMUSIC <i class="bi bi-music-note"></i></a>
             <form class="d-flex ms-2  w-100  " role="search">
                 <input class="form-control me-4  w-100 " style="width: 500px"
                        type="search" placeholder="제목명 가수명을 입력해주세요" aria-label="Search">
             </form>
-            <button class="btn btn-outline-dark form-control me-1" style="width: 100px; background-color: skyblue"
-                    type="submit" >검색</button>
+            <button class="btn btn-outline-dark form-control me-1" style="width: 120px; background-color: skyblue"
+                    type="submit"  ><i class="bi bi-search"></i> 검색</button>
         </div>
     </div>
 </nav>

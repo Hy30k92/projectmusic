@@ -137,12 +137,13 @@
             {% for music in mlist %}
             <div class="music-list-item">
                 <span>
-                    <img class="mimg" src="/static/img/{{ music.title }}.png" alt="{{ music.title }}">
+                    <img class="mimg" src="playMusic('{{ music.mno }} alt="{{ music.title }}">
                     {{ music.title }} - {{ music.singer }}
                 </span>
                 <div>
-                    <button class="btn btn-primary btn-sm" onclick="playMusic('{{ music.mno }}', '{{ music.title }}', '{{ music.singer }}')">재생</button>
-                    <button class="btn btn-secondary btn-sm">보관함 추가</button>
+                    <button class="btn btn-primary btn-sm"  onclick="playMusic('{{ music.mno }}',
+                    '{{ music.title }}', '{{ music.singer }}')">재생 <i class="bi bi-play-circle"></i> </button>
+                    <button class="btn btn-secondary btn-sm">보관함 추가 <i class="bi bi-inboxes"></i></button>
                 </div>
             </div>
             {% endfor %}
@@ -152,26 +153,36 @@
 
 <!-- 음악 플레이어 섹션 -->
 <div id="music-player" class="d-none">
-    <h5 id="music-title" style="color: white; width: 200px">빅뱅 - 붉은노을</h5>
-    <img src="/static/img/totoro.png" alt="K-Pop" class="img-fluid" style="margin-right: 20px; height: 60px; width: 60px">
+    <h5 id="music-title" style="color: white; width: 200px"></h5>
+    <img id="music-image" src="" alt="Album Art" class="img-fluid" style="margin-right: 20px; height: 60px; width: 60px">
     <audio id="audio-player" controls>
-        <source id="audio-source" src="" type="audio/mpeg">
+        <source id="audio-source" src='' type="audio/mp3">
         브라우저가 오디오 요소를 지원하지 않습니다.
     </audio>
+
 </div>
+
 
 <script>
     function playMusic(mno, title, singer) {
-        // 음악 플레이어 섹션을 표시합니다.
+        console.log(`mno: ${mno}, title: ${title}, singer: ${singer}`); // 디버깅을 위한 로그
+
+        // 음악 플레이어 섹션을 표시
         document.getElementById('music-player').classList.remove('d-none');
 
-        // 제목과 가수 이름을 업데이트합니다.
+        // 제목과 가수 이름을 업데이트
         document.getElementById('music-title').textContent = `${title} - ${singer}`;
 
-        // 오디오 소스와 URL 설정
+        // 이미지와 오디오 소스 업데이트
+        var musicImage = document.getElementById('music-image');
         var audioPlayer = document.getElementById('audio-player');
         var audioSource = document.getElementById('audio-source');
-        audioSource.src = `/music/mp3play/${mno}`; // 선택한 mno 번의 노래 URL
+
+        // 이미지 URL을 mno를 이용해 설정
+        // musicImage.src = `/music/musiccover/${mno}`; // 제목을 포함하여 음악 이미지 URL 설정
+        // 오디오 소스 URL 설정
+        audioSource.src = `/music/mp3play/${mno}`; // mno를 URL에 포함하여 선택한 곡을 로드
+
         audioPlayer.load();
         audioPlayer.play();
     }
