@@ -1,0 +1,254 @@
+{% extends 'include/base.html' %}
+
+{% block title %}
+프로젝트 메인 페이지
+{% endblock %}
+
+{% block style %}
+<style>
+  main {
+    margin: 60px 50px 0 150px;
+    transition: margin 0.5s ease;
+  }
+
+  #music-player {
+    position: fixed; /* 페이지 스크롤과 상관없이 고정 위치 */
+    bottom: 0; /* 화면 하단에 붙임 */
+    left: 0; /* 왼쪽 끝에 붙임 */
+    width: 100%; /* 전체 너비를 차지 */
+    background-color: #000; /* 배경색을 검은색으로 설정 */
+    padding: 10px; /* 여백 추가 */
+    border-top: 1px solid #333; /* 상단 테두리 추가 (어두운 회색) */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3); /* 위쪽 그림자 추가 */
+    z-index: 1000; /* 다른 요소들 위에 표시되도록 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    height: 80px; /* 높이를 80px로 설정하여 길게 보이도록 조정 */
+    display: flex; /* 내부 요소를 수평으로 정렬 */
+    align-items: center; /* 수직으로 중앙 정렬 */
+    justify-content: center; /* 수평으로 중앙 정렬 */
+  }
+
+  #audio-player {
+    width: 100%; /* 오디오 플레이어가 전체 너비를 차지하도록 설정 */
+  }
+
+  .d-none {
+    display: none;
+  }
+
+  .img-fluid {
+    max-width: 100%; /* 이미지의 최대 너비를 100%로 설정 */
+    height: auto; /* 이미지의 높이를 자동으로 설정 */
+  }
+
+  .section-title {
+    font-size: 1.5rem; /* 제목 폰트 크기 */
+    margin-bottom: 1rem; /* 제목 아래 여백 */
+  }
+
+  .section {
+    padding: 20px; /* 섹션 안쪽 여백 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    background: linear-gradient(to right,#2b2f32 ,darkgray); /* 배경색 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    margin-bottom: 20px; /* 섹션 간 여백 */
+  }
+
+  .section img {
+    border-radius: 8px; /* 이미지 모서리 둥글게 */
+  }
+
+  .section .row {
+    margin-top: -15px; /* 이미지 사이 간격 조정 */
+  }
+
+  .section h6 {
+    margin-bottom: 10px; /* 제목 아래 여백 */
+    font-size: 1.2rem; /* 제목 폰트 크기 */
+  }
+
+  .section a {
+    text-decoration: none; /* 링크 기본 밑줄 제거 */
+  }
+
+  .track-number {
+    font-weight: bold;
+    color: #007bff; /* Track number color */
+    margin-right: 10px;
+  }
+
+  .music-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* 아이템 간격 */
+  }
+
+  .music-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 양 끝에 배치 */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fa;
+  }
+
+  .mimg {
+    height: 40px;
+    width: 40px;
+    object-fit: cover;
+    margin-right: 10px; /* 이미지와 텍스트 사이 간격 */
+  }
+
+  .music-info {
+    flex-grow: 1; /* 가능한 공간을 차지하도록 설정 */
+    display: flex;
+    align-items: center;
+  }
+
+  .music-actions {
+    display: flex;
+    gap: 10px; /* 버튼 사이 간격 */
+  }
+
+  /* 미디어 쿼리: 화면 너비가 870px 이하일 때 버튼을 title 아래로 이동 */
+  @media (max-width: 870px) {
+    .music-actions {
+      flex-direction: column; /* 버튼을 세로 방향으로 배치 */
+      gap: 5px; /* 버튼 사이 간격 조정 */
+      margin-top: 10px; /* title과 버튼 사이 여백 추가 */
+    }
+
+    .music-actions button {
+      font-size: 0.8rem; /* 폰트 크기 줄이기 */
+      padding: 5px 8px; /* 패딩 줄이기 */
+      min-width: 50px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block main %}
+<main>
+  <div class="container mt-5">
+    <!-- 앨범 정보 Section -->
+    <div class="row">
+      <!-- 앨범 Image -->
+      <div class="col-md-6 mb-4 mb-md-0">
+        <div class="card shadow-sm h-100">
+          <!-- 앨범 커버 이미지에 id 추가 -->
+          <img id="album-cover" src="/static/img/춤.jpg" class="card-img-top" alt="앨범 커버 이미지">
+          <div class="card-body">
+          </div>
+        </div>
+      </div>
+      <!-- 앨범 상세 정보  -->
+      <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="card-title text-center mb-4">앨범 정보</h5>
+            <table class="table table-borderless">
+              <tbody id="album-info">
+              <tr>
+                <th scope="row">곡</th>
+                <td id="track-title"></td>
+              </tr>
+              <tr>
+                <th scope="row">아티스트</th>
+                <td id="track-singer"></td>
+              </tr>
+              <tr>
+                <th scope="row">장르</th>
+                <td id="track-genre">댄스</td>
+              </tr>
+              <tr>
+                <th scope="row">발매일</th>
+                <td id="track-year"></td>
+              </tr>
+              <tr>
+                <th scope="row">국가유형</th>
+                <td id="track-country"></td>
+              </tr>
+              </tbody>
+            </table>
+            <!-- Album Introduction -->
+            <div class="mt-4">
+              <h5 class="card-title text-center mb-4">앨범 소개</h5>
+              <p class="card-text" id="track-ment">신나는 댄스 장르의 음악들입니다</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-5">
+    <!-- Recommended Songs Section -->
+    <div class="mb-4">
+      <h5>추천 10곡</h5>
+      <div class="music-list-container">
+        {% for music in mlist %}
+        <div class="music-list-item">
+          <span class="track-number">{{ loop.index }}.</span>
+          <div class="music-info">
+            <img class="mimg" src="/music/musiccover/{{ music.mno }}" alt="{{ music.title }}">
+            <span style="color: black;">{{ music.title }} - {{ music.singer }}</span>
+          </div>
+          <div class="music-actions">
+            <button class="btn btn-primary btn-sm" onclick="playMusic('{{ music.mno }}', '{{ music.title }}',
+             '{{ music.singer }}', '{{ music.genre }}', '{{ music.year }}', '{{ music.country }}',
+              '{{ music.ment }}')">재생 <i class="bi bi-play-circle"></i></button>
+            <button class="btn btn-secondary btn-sm">보관함 추가 <i class="bi bi-inboxes"></i></button>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- 음악 플레이어 섹션 -->
+<div id="music-player" class="d-none">
+  <h5 id="music-title" style="color: white; width: 200px"></h5>
+  <img id="music-image" src="" alt="Album Art" class="img-fluid" style="margin-right: 20px; height: 60px; width: 60px">
+  <audio id="audio-player" controls>
+    <source id="audio-source" src='' type="audio/mp3">
+    브라우저가 오디오 요소를 지원하지 않습니다.
+  </audio>
+</div>
+
+<script>
+  function playMusic(mno, title, singer, genre, year, country, ment) {
+    console.log(`mno: ${mno}, title: ${title}, singer: ${singer}`); // 디버깅을 위한 로그
+
+    // 음악 플레이어 섹션을 표시
+    document.getElementById('music-player').classList.remove('d-none');
+
+    // 제목과 가수 이름을 업데이트
+    document.getElementById('music-title').textContent = `${title} - ${singer}`;
+
+    // 이미지와 오디오 소스 업데이트
+    var musicImage = document.getElementById('music-image');
+    var audioPlayer = document.getElementById('audio-player');
+    var audioSource = document.getElementById('audio-source');
+
+    // 이미지 URL을 mno를 이용해 설정
+    musicImage.src = `/music/musiccover/${mno}`; // mno를 포함하여 음악 이미지 URL 설정
+    // 오디오 소스 URL 설정
+    audioSource.src = `/music/mp3play/${mno}`; // mno를 URL에 포함하여 선택한 곡을 로드
+
+    audioPlayer.load();
+    audioPlayer.play();
+
+    // 앨범 정보 업데이트
+    document.getElementById('album-cover').src = `/music/musiccover/${mno}`;
+    document.getElementById('track-title').textContent = title;
+    document.getElementById('track-singer').textContent = singer;
+    document.getElementById('track-genre').textContent = genre;
+    document.getElementById('track-year').textContent = year;
+    document.getElementById('track-country').textContent = country;
+    document.getElementById('track-ment').textContent = ment;
+  }
+</script>
+{% endblock %}

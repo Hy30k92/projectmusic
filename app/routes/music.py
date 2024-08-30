@@ -17,7 +17,7 @@ music_router= APIRouter()
 
 templates = Jinja2Templates(directory='views/templates')
 
-
+# 음악 메인페이지
 @music_router.get('/index')
 async def index(req: Request, db: Session = Depends(get_db)):
     try:
@@ -27,10 +27,79 @@ async def index(req: Request, db: Session = Depends(get_db)):
         print(f'▷▷▷ music_list 오류발생 : {str(ex)}')
         return RedirectResponse(url='/member/error', status_code=303)
 
+# 장르 - dance
+@music_router.get('/dance')
+async def dance(req: Request, db: Session = Depends(get_db)):
+    try:
+        mlist = MusicService.get_music_genre(db, 'dance')
+        return templates.TemplateResponse('/music/dance.html', {'request': req, 'mlist': mlist})
+    except Exception as ex:
+        print(f'▷▷▷ dance_list 오류발생 : {str(ex)}')
+        return RedirectResponse(url='/member/error', status_code=303)
+
+# 장르 - hiphop
+@music_router.get('/hiphop')
+async def hiphop(req: Request, db: Session = Depends(get_db)):
+    try:
+        mlist = MusicService.get_music_genre(db, 'hiphop')
+        return templates.TemplateResponse('/music/hiphop.html', {'request': req, 'mlist': mlist})
+    except Exception as ex:
+        print(f'▷▷▷ dance_list 오류발생 : {str(ex)}')
+        return RedirectResponse(url='/member/error', status_code=303)
+
+# 장르 - ballad
+@music_router.get('/ballad')
+async def ballad(req: Request, db: Session = Depends(get_db)):
+    try:
+        mlist = MusicService.get_music_genre(db, 'ballad')
+        return templates.TemplateResponse('/music/ballad.html', {'request': req, 'mlist': mlist})
+    except Exception as ex:
+        print(f'▷▷▷ ballad_list 오류발생 : {str(ex)}')
+        return RedirectResponse(url='/member/error', status_code=303)
+
+# 국가별 - kpop
+@music_router.get('/kpop')
+async def kpop(req: Request, db: Session = Depends(get_db)):
+    try:
+        mlist = MusicService.get_music_country(db, 'kpop')
+        return templates.TemplateResponse('/music/kpop.html', {'request': req, 'mlist': mlist})
+    except Exception as ex:
+        print(f'▷▷▷ kpop_list 오류발생 : {str(ex)}')
+        return RedirectResponse(url='/member/error', status_code=303)
+
+# 국가별 - jpop
+@music_router.get('/jpop')
+async def jpop(req: Request, db: Session = Depends(get_db)):
+    try:
+        mlist = MusicService.get_music_country(db, 'jpop')
+        return templates.TemplateResponse('/music/jpop.html', {'request': req, 'mlist': mlist})
+    except Exception as ex:
+        print(f'▷▷▷ jpop_list 오류발생 : {str(ex)}')
+        return RedirectResponse(url='/member/error', status_code=303)
+
+# 국가별 - pop
+@music_router.get('/pop')
+async def kpop(req: Request, db: Session = Depends(get_db)):
+    try:
+        mlist = MusicService.get_music_country(db, 'pop')
+        return templates.TemplateResponse('/music/pop.html', {'request': req, 'mlist': mlist})
+    except Exception as ex:
+        print(f'▷▷▷ pop_list 오류발생 : {str(ex)}')
+        return RedirectResponse(url='/member/error', status_code=303)
+
+# 제목 or 가수로 검색
+@music_router.get('/search')
+async def search(req: Request, query: str = '',db: Session = Depends(get_db)):
+    try:
+        mlist = MusicService.get_music_search(db, title=query, singer=query)
+        return templates.TemplateResponse('/music/search.html', {'request': req, 'mlist': mlist})
+    except Exception as ex:
+        print(f'▷▷▷ search 오류발생 : {str(ex)}')
+        return RedirectResponse(url='/member/error', status_code=303)
 
 @music_router.get('/music')
 async def music(req: Request):
-    return templates.TemplateResponse('music/music.html', {'request': req})
+    return templates.TemplateResponse('/music/music.html', {'request': req})
 
 @music_router.get('/musicvideo')
 async def musicvideo(req: Request):
@@ -71,10 +140,7 @@ async def musiccover(mno: int, db: Session = Depends(get_db) ):
 
     return FileResponse(file_path, media_type='image/jpeg')
 
-
-
 # 뮤직비디오,랜덤
-
 @music_router.get('/random_mvno', response_class=JSONResponse)
 async def random_mvno(db: Session = Depends(get_db)):
     mvno = MusicVideoService.get_random_mvno(db)
@@ -130,3 +196,9 @@ async def random_mvnos(db: Session = Depends(get_db)):
     random_mvnos = random.sample(results, 3)
 
     return JSONResponse(content={"mvnos": random_mvnos})
+
+# FastAPI 엔드포인트에서 호출
+@music_router.get('/music/index')
+async def index(db: Session = Depends(get_db)):
+    music_list = MusicService.get_random_music_list(db)
+    return {"mlist": music_list}

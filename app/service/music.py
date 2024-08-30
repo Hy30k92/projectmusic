@@ -25,6 +25,28 @@ class MusicService:
             print(f'▶▶▶ select_music 오류발생 : {str(ex)}')
             return []
 
+    @staticmethod
+    def get_music_genre(db, genre):
+        try:
+            stmt = select(Music).where(Music.genre == genre)
+            result = db.execute(stmt).scalars().all()
+            return result
+
+        except Exception as e:
+            print(f"▶▶▶ get_music_by_genre 오류 발생: {str(e)}")
+            return []
+
+    @staticmethod
+    def get_music_country(db, country):
+        try:
+            stmt = select(Music).where(Music.genre == country)
+            result = db.execute(stmt).scalars().all()
+            return result
+
+        except Exception as e:
+            print(f"▶▶▶ get_music_by_genre 오류 발생: {str(e)}")
+            return []
+
 class Mp3Service:
     @staticmethod
     def music_mp3(db, mno):
@@ -48,7 +70,7 @@ class Mp3Service:
         except SQLAlchemyError as ex:
             print(f'▶▶▶ selectone_file 오류 발생 : {str(ex)}')
 
-            
+
 class MusicVideoService:
     @staticmethod
     def selectone_file(db, mvno):
@@ -87,6 +109,9 @@ class MusicVideoService:
         stmt = select(MusicVideo.mvno)  # Query all mvno values
         results = db.execute(stmt).scalars().all()  # Fetch all results
         return random.choice(results) if results else None  # Choose randomly
+
+# 난수로 추천 10곡
+
 
 
 
