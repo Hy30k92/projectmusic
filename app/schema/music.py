@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 
-
 class NewMusic(BaseModel):
     title: str
     singer: str
@@ -16,3 +15,7 @@ class NewMusicVideo(BaseModel):
     lyrics: str
     iname: str
     fname: str
+
+class NewStorage(BaseModel):
+    userid: str
+    mno: int

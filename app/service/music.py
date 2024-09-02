@@ -1,6 +1,6 @@
 import random
 
-from sqlalchemy import select
+from sqlalchemy import select, or_
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -24,7 +24,7 @@ class MusicService:
         except SQLAlchemyError as ex:
             print(f'▶▶▶ select_music 오류발생 : {str(ex)}')
             return []
-
+    # 장르 음악 함수
     @staticmethod
     def get_music_genre(db, genre):
         try:
@@ -35,21 +35,34 @@ class MusicService:
         except Exception as e:
             print(f"▶▶▶ get_music_by_genre 오류 발생: {str(e)}")
             return []
-
+    # 국가별 음악 함수
     @staticmethod
     def get_music_country(db, country):
         try:
-            stmt = select(Music).where(Music.genre == country)
+            stmt = select(Music).where(Music.country == country)
             result = db.execute(stmt).scalars().all()
             return result
 
         except Exception as e:
-            print(f"▶▶▶ get_music_by_genre 오류 발생: {str(e)}")
+            print(f"▶▶▶ get_music_country 오류 발생: {str(e)}")
+            return []
+    # 제목 or 가수로 검색
+    @staticmethod
+    def get_music_search(db: Session, title: str, singer: str):
+        try:
+            stmt = select(Music).where(
+                or_(Music.title.ilike(f"%{title}%"), Music.singer.ilike(f"%{singer}%"))
+            )
+            result = db.execute(stmt).scalars().all()
+            return result
+        except Exception as e:
+            print(f"▶▶▶ 음악 검색 오류 발생: {str(e)}")
             return []
 
 class Mp3Service:
     @staticmethod
-    def music_mp3(db, mno):
+    # def music_mp3(db, mno):
+    def music_mp3(db: Session, mno: int) -> str:
         try:
             find_pno = Music.mno == mno
             stmt = select(Music.fname).where(find_pno)
@@ -61,7 +74,8 @@ class Mp3Service:
             print(f'▶▶▶  music_mp3 오류 발생: , {str(ex)}')
 
     @staticmethod
-    def selectone_musicimage(db, mno):
+    # def selectone_musicimage(db, mno):
+    def selectone_musicimage(db: Session, mno: int) -> str:
         try:
             stmt = select(Music.iname).where(Music.mno == mno)
             result = db.execute(stmt).scalars().first()
@@ -70,7 +84,7 @@ class Mp3Service:
         except SQLAlchemyError as ex:
             print(f'▶▶▶ selectone_file 오류 발생 : {str(ex)}')
 
-
+            
 class MusicVideoService:
     @staticmethod
     def selectone_file(db, mvno):
@@ -109,9 +123,6 @@ class MusicVideoService:
         stmt = select(MusicVideo.mvno)  # Query all mvno values
         results = db.execute(stmt).scalars().all()  # Fetch all results
         return random.choice(results) if results else None  # Choose randomly
-
-# 난수로 추천 10곡
-
 
 
 

@@ -19,6 +19,8 @@ async def lifespan(app: FastAPI):
     await db_startup()
     yield
     await db_shutdown()
+
+
 app = FastAPI(lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="views/static"), name="static")
 
@@ -26,19 +28,20 @@ app.mount("/static", StaticFiles(directory="views/static"), name="static")
 # pip install itsdangerous
 app.add_middleware(SessionMiddleware, secret_key='20240822110005')
 
-templates = Jinja2Templates(directory="views/templates") # jinja2 설정
+templates = Jinja2Templates(directory="views/templates")  # jinja2 설정
 app.mount('/static', StaticFiles(directory='views/static'), name='static')
 
 app.include_router(member_router, prefix='/member')
 app.include_router(board_router, prefix='/board')
 app.include_router(music_router, prefix='/music')
 
+
 @app.get("/", response_class=HTMLResponse)
 async def index(req: Request):
     return templates.TemplateResponse('/member/login.html', {'request': req})
 
+
 if __name__ == '__main__':
     import uvicorn
+
     uvicorn.run('main:app', reload=True)
-
-

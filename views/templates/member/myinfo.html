@@ -53,6 +53,12 @@
                     <label for="hiredate" class="col-sm-4 col-form-label">가입일</label>
                     <div class="col-sm-8" id="hiredate">{{ m.regdate.strftime('%Y-%m-%d') }}</div>
                 </div>
+                <label for="hiredate" class="col-sm-4 col-form-label">결제일</label>
+                <div class="col-sm-8" id="sdate"></div>
+
+                <label for="hiredate" class="col-sm-4 col-form-label">만료일</label>
+                <div class="col-sm-8" id="edate"></div>
+
                 {% endfor %}
             </form>
             {% else %}

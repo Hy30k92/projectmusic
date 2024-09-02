@@ -6,46 +6,46 @@
 
 {% block style %}
 <style>
-    form { width: 450px; margin: auto }
-    th { width: 150px; }
-    tr {height: 40px }
-    tr:nth-child(3), tr:nth-child(4) {vertical-align: top; }
-    #listbtn { margin-left: 95px }
-    input, textarea, button { padding: 5px }
+    .form-container {
+        background-color: lightslategray;
+        max-width: 800px;
+        margin: auto;
+    }
+    .btn-custom {
+        margin-right: 10px;
+    }
+    h2.text-center {
+        margin-top: 100px; /* 글읽기 텍스트를 아래로 100픽셀만큼 내림 */
+        margin-bottom: 30px; /* 글읽기 텍스트를 아래로 100픽셀만큼 내림 */
+    }
 </style>
 {% endblock %}
 
 {% block main %}
 <main>
-    <div class="container mt-5">
+    <div class="container mt-5 form-container">
         <h2 class="text-center mb-4">글쓰기</h2>
         <form name="writefrm" enctype="multipart/form-data">
-            <table class="table table-bordered">
-                <tr>
-                    <th>제 목</th>
-                    <td><input type="text" class="form-control" name="title" id="title" required></td>
-                </tr>
-                <tr>
-                    <th>작성자</th>
-                    <td><input type="text" class="form-control" name="userid" id="userid" value="zzyzzy" readonly></td>
-                </tr>
-                <tr>
-                    <th>본 문</th>
-                    <td><textarea class="form-control" name="contents" id="contents" rows="10" required></textarea></td>
-                </tr>
-                <tr>
-                    <th>첨부파일</th>
-                    <td>
-                        <div><input type="file" class="form-control" name="files" id="file"></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="text-center">
-                        <button type="button" class="btn btn-secondary me-2" id="listbtn" onclick="location.href='/board/list/1'">리스트로</button>
-                        <button type="submit" class="btn btn-primary" id="writeokbtn">입력완료</button>
-                    </td>
-                </tr>
-            </table>
+            <div class="mb-3">
+                <label for="title" class="form-label">제 목</label>
+                <input type="text" class="form-control" name="title" id="title" required>
+            </div>
+            <div class="mb-3">
+                <label for="userid" class="form-label">작성자</label>
+                <input type="text" class="form-control" name="userid" id="userid" value="{{ request.session.logined_uid }}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="contents" class="form-label">본 문</label>
+                <textarea class="form-control" name="contents" id="contents" rows="10" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="file" class="form-label">첨부파일</label>
+                <input type="file" class="form-control" name="files" id="file">
+            </div>
+            <div class="text-center">
+                <button type="button" class="btn btn-secondary btn-custom" id="listbtn" onclick="location.href='/board/list/1'">리스트로</button>
+                <button type="submit" class="btn btn-primary" id="writeokbtn">입력완료</button>
+            </div>
         </form>
     </div>
 </main>

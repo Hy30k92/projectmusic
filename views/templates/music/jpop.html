@@ -1,7 +1,7 @@
 {% extends 'include/base.html' %}
 
 {% block title %}
-프로젝트 보관함 - 내 보관함
+프로젝트 장르 - 댄스 페이지
 {% endblock %}
 
 {% block main %}
@@ -12,7 +12,8 @@
       <!-- 앨범 Image -->
       <div class="col-md-6 mb-4 mb-md-0">
         <div class="card shadow-sm h-100">
-          <img id="album-cover" src="/static/img/logo.png" style="height: 460px" class="card-img-top" alt="앨범 커버 이미지">
+          <!-- 앨범 커버 이미지에 id 추가 -->
+          <img id="album-cover" src="/static/img/춤.jpg" class="card-img-top" alt="앨범 커버 이미지">
           <div class="card-body">
           </div>
         </div>
@@ -23,7 +24,7 @@
           <div class="card-body">
             <h5 class="card-title text-center mb-4">앨범 정보</h5>
             <table class="table table-borderless">
-              <tbody>
+              <tbody id="album-info">
               <tr>
                 <th scope="row">곡</th>
                 <td id="track-title"></td>
@@ -42,60 +43,59 @@
               </tr>
               <tr>
                 <th scope="row">국가유형</th>
-                <td id="track-country"></td>
+                <td id="track-country"> JPop </td>
               </tr>
               </tbody>
             </table>
             <!-- Album Introduction -->
             <div class="album-intro-container">
               <div class="album-ment">
-                <h5 class="card-title text-center mb-4" style=" border-bottom: 1px solid silver; padding: 10px; ">앨범 소개</h5>
-                <p class="card-text" id="track-ment" style=" border-bottom: 1px solid silver; padding: 10px; ">  </p>
-              </div>
+              <h5 class="card-title text-center mb-4" style=" border-bottom: 1px solid silver; padding: 10px; ">앨범 소개</h5>
+              <p class="card-text" id="track-ment" style=" border-bottom: 1px solid silver; padding: 10px; "> </p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="container mt-5">
-    <h5 class="text-center mb-3"> 내 보관함 </h5>
-    <div class="top-buttons">
-      <button class="btn btn-success btn-sm" onclick="playRandomMusic()"><i class="bi bi-shuffle"></i> 무작위듣기</button>
-      <button class="btn btn-warning btn-sm" onclick="addAllToStorage()"><i class="bi bi-file-earmark-plus-fill"></i>모든곡삭제</button>
-    </div>
-    <div class="border-bottom pb-2 mb-3">
-      <div class="row">
-        <div class="col-1 text-center font-weight-bold">순번</div>
-        <div class="col-1 text-center font-weight-bold">제목</div>
-        <div class="col-6 text-md-end font-weight-bold" style="margin-right: 100px;">아티스트</div>
-        <div class="col-1 text-md-center font-weight-bold " style="margin-left: 25px">재생</div>
-        <div class="col-1 text-md-start font-weight-bold" style="margin-left: 30px; padding: 0 1px; ">삭제</div>
-      </div>
-    </div>
-    <div class="music-list-container">
-      {% if storage_items %}
-      {% for item in storage_items %}
-      <div class="music-list-item align-items-center" data-mno="{{ item.music.mno }}">
-        <div class="col-1 text-center">
-          <span class="track-number" style="color: black">{{ loop.index }}</span>
-          <img class="mimg" src="/music/musiccover/{{ item.music.mno }}" alt="{{ item.music.title }}">
+    <div class="container mt-5">
+      <div class="mb-4">
+        <h5 class="text-center mb-3">국가별 음악 J-POP</h5>
+        <div class="top-buttons">
+          <button class="btn btn-success btn-sm" onclick="playRandomMusic()"><i class="bi bi-shuffle"></i> 무작위듣기</button>
+          <button class="btn btn-warning btn-sm" onclick="addAllToStorage()"><i class="bi bi-file-earmark-plus-fill"></i> 전체보관함추가</button>
         </div>
-        <div class="music-info">
-          <div class="music-title-artist">
-            <span style="color: black; margin-left: 15px">{{ item.music.title }}</span>
-            <span class="artist-info" style="color: black; display: block; margin-left: 530px">{{ item.music.singer }}</span>
+        <div class="border-bottom pb-2 mb-3">
+          <div class="row">
+            <div class="col-1 text-center font-weight-bold">순번</div>
+            <div class="col-1 text-center font-weight-bold">제목</div>
+            <div class="col-6 text-md-end font-weight-bold" style="margin-right: 100px;">아티스트</div>
+            <div class="col-1 text-md-center font-weight-bold " style="margin-left: 25px">재생</div>
+            <div class="col-1 text-md-start font-weight-bold" style="margin-left: 30px; padding: 0 1px; ">보관함추가</div>
           </div>
         </div>
-        <div class="music-actions">
-          <button class="btn btn-primary btn-sm" onclick="playMusic('{{ item.music.mno }}', '{{ item.music.title }}', '{{ item.music.singer }}', '{{ item.music.genre }}', '{{ item.music.year }}', '{{ item.music.country }}', '{{ item.music.ment }}')"><i class="bi bi-play-circle"></i></button>
-          <button class="btn btn-danger btn-sm" onclick="removeFromStorage('{{ item.sno }}')">삭제<i class="bi bi-trash"></i></button>
+        <div class="music-list-container">
+          {% for music in mlist %}
+          <div class="music-list-item align-items-center" data-mno="{{ music.mno }}">
+            <div class="col-1 text-center">
+              <span class="track-number" style="color: black">{{ loop.index }}</span>
+              <img class="mimg" src="/music/musiccover/{{ music.mno }}" alt="{{ music.title }}">
+            </div>
+            <div class="music-info">
+              <div class="music-title-artist">
+                <span style="color: black; margin-left: 15px">{{ music.title }}</span>
+                <span class="artist-info" style="color: black; display: block; margin-left: 530px">{{ music.singer }}</span>
+              </div>
+            </div>
+            <div class="music-actions">
+              <button class="btn btn-primary btn-sm" onclick="playMusic('{{ music.mno }}', '{{ music.title }}', '{{ music.singer }}', '{{ music.genre }}', '{{ music.year }}', '{{ music.country }}', '{{ music.ment }}')"><i class="bi bi-play-circle"></i></button>
+              <button class="btn btn-secondary btn-sm" onclick="addToStorage('{{ music.mno }}')"><i class="bi bi-inboxes"></i></button>
+            </div>
+          </div>
+          {% endfor %}
         </div>
       </div>
-      {% endfor %}
-      {% else %}
-      <p>보관함이 비어 있습니다.</p>
-      {% endif %}
     </div>
 </main>
 
@@ -179,58 +179,55 @@
     }
   }
 
-  // 보관함 삭제
-  function removeFromStorage(sno) {
-    if (confirm("정말 이 곡을 삭제하시겠습니까?")) {
-      fetch('/music/remove_from_storage', {
+  // 보관함 추가
+  async function addToStorage(mno) {
+    try {
+      let response = await fetch('/music/add_to_storage', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ sno: sno })
-      })
-              .then(response => response.json())
-              .then(data => {
-                if (data.message) {
-                  alert(data.message);
-                  // 삭제 후 페이지 새로고침
-                  location.reload();
-                } else {
-                  alert('곡을 삭제하는데 문제가 발생했습니다.');
-                }
-              })
-              .catch(error => {
-                console.error('Error:', error);
-                alert('서버와의 통신 중 오류가 발생했습니다.');
-              });
+        body: JSON.stringify({ mno: mno }),
+      });
+
+      let result = await response.json();
+      alert(result.message);
+    } catch (error) {
+      console.error("Error adding to storage:", error);
+      alert("Error adding to storage.");
     }
   }
 
-  // 모든 곡 삭제
-  function addAllToStorage() {
-    if (confirm("정말 모든 곡을 삭제하시겠습니까?")) {
-      fetch('/music/remove_all_storage', {
+  // 보관함 전체 추가
+  async function addAllToStorage() {
+    console.log("Adding all selected songs to storage.");
+
+    const musicItems = document.querySelectorAll('.music-list-item');
+    const musicIds = Array.from(musicItems).map(item => parseInt(item.dataset.mno, 10));
+
+    if (!musicIds.length) {
+      console.log("No music items found.");
+      return;
+    }
+
+    try {
+      const response = await fetch('/music/add_all_storage', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        // 빈 바디를 전송
-        body: JSON.stringify({})
-      })
-              .then(response => response.json())
-              .then(data => {
-                if (data.message) {
-                  alert(data.message);
-                  // 삭제 후 페이지 새로고침
-                  location.reload();
-                } else {
-                  alert('모든 곡을 삭제하는데 문제가 발생했습니다.');
-                }
-              })
-              .catch(error => {
-                console.error('Error:', error);
-                alert('서버와의 통신 중 오류가 발생했습니다.');
-              });
+        body: JSON.stringify({ music_ids: musicIds }), // Correctly format data
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add selected songs to storage');
+      }
+
+      const result = await response.json();
+      alert(result.message);
+    } catch (error) {
+      console.error('Error:', error);
+      alert("Error adding to storage.");
     }
   }
 </script>
